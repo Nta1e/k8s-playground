@@ -12,6 +12,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 origins = [
 	"http://localhost:5173",
+	"http://localhost:3000",
 ]
 
 app = FastAPI()
