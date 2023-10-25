@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "server"
+version = "0.1.0"
+description = "backend for todo app"
+authors = ["Nta1e <shadikntale@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.104.0"
+pydantic = "^2.4.2"
+FastAPI-SQLAlchemy = "^0.2.1"
+alembic = "^1.12.0"
+psycopg2-binary = "^2.9.9"
+uvicorn = { extras = ["standard"], version = "^0.23.2" }
+python-dotenv = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
