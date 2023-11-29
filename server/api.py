@@ -4,7 +4,7 @@ from fastapi_sqlalchemy import db
 from models import Todo
 from schema import TodoRequestSchema, TodoResponseSchema
 
-router = APIRouter()
+router = APIRouter(prefix="/api")
 
 
 @router.get('/healthz', tags=['health'])

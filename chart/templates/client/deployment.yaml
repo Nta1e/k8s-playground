@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}-client
+  labels:
+    app: {{ include "chart.fullname" . }}-client
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.client.deploy.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "chart.fullname" . }}-client
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "chart.fullname" . }}-client
+        {{- include "chart.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "chart.fullname" . }}-client
+          image: {{ .Values.client.deploy.containers.image}}
+          imagePullPolicy: {{ .Values.client.deploy.containers.image}}
+          command: ["node", "build/index.js"]
+          env:
+            - name: BACKEND_URL
+              value: "http://localhost:{{ .Values.server.service.ports.nodePort }}"
+          ports:
+            - name: {{ .Values.client.deploy.containers.ports.name }}
+              containerPort: {{ .Values.client.deploy.containers.ports.containerPort }} 
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

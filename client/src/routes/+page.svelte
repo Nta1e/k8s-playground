@@ -8,13 +8,15 @@
 		complete: boolean;
 	}
 
+	const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 	let error: string | null = null;
 	let todos: Todo[] = [];
 	let todoItem = '';
 
 	const getTodos = async () => {
 		try {
-			const res = await axios.get('http://localhost:8000/todos');
+			const res = await axios.get(`${BACKEND_URL}/todos`);
 			todos = res.data;
 		} catch (e: unknown) {
 			error = e as string;
@@ -24,7 +26,7 @@
 	const addTodo = async () => {
 		try {
 			if (!todoItem) return alert('please add a goal for today!');
-			const res = await axios.post('http://localhost:8000/todo', {
+			const res = await axios.post(`${BACKEND_URL}/todo`, {
 				title: todoItem
 			});
 			todos = [...todos, res?.data];
@@ -34,19 +36,19 @@
 		}
 	};
 
-	const toggleComplete = async (todo) => {
+	const toggleComplete = async (todo: Todo) => {
 		const todoIndex = todos.indexOf(todo);
 		try {
-			const { data } = await axios.put(`http://localhost:8000/todo/${todo.id}`);
+			const { data } = await axios.put(`${BACKEND_URL}/todo/${todo.id}`);
 			todos[todoIndex].complete = data.complete;
 		} catch (e: unknown) {
 			error = e as string;
 		}
 	};
 
-	const deleteTodo = async (todo) => {
+	const deleteTodo = async (todo: Todo) => {
 		try {
-			await axios.delete(`http://localhost:8000/todo/${todo.id}`);
+			await axios.delete(`${BACKEND_URL}/${todo.id}`);
 			todos = todos.filter((to) => to.id !== todo.id);
 		} catch (e: unknown) {
 			error = e as string;
