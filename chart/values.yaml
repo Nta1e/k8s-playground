@@ -1,0 +1,63 @@
+replicaCount: 1
+server:
+  deploy:
+    replicas: 1
+    containers:
+      name: todo-server
+      imagePullPolicy: IfNotPresent
+      image: todo-server:latest
+      ports:
+          containerPort: 8000
+          name: httpback
+  service:
+    name: todo-server-svc
+    type: NodePort
+    labels:
+      app: todo-server
+    ports:
+      name: server-port
+      port: 8000
+      nodePort: 30018
+      targetPort: httpback
+
+client:
+  deploy:
+    replicas: 1
+    containers:
+      name: todo-client
+      imagePullPolicy: IfNotPresent
+      image: todo-client:latest
+      ports:
+          containerPort: 80
+          name: httpfront
+  service:
+    name: todo-client-svc
+    type: NodePort
+    labels:
+      app: todo-client
+    ports:
+      name: client-port
+      port: 8080
+      nodePort: 30008
+      targetPort: httpfront
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 500m
+    memory: 256Mi
+
+localPostgres: true
+postgres:
+  name: "postgres"
+  port: "5432"
+  user: "postgres"
+  resources:
+    requests:
+      memory: "40Mi"
+      cpu: "100m"
+    limits:
+      memory: "128Mi"
+      cpu: "1"

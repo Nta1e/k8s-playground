@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}-server
+  labels:
+    app: {{ include "chart.fullname" . }}-server
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.server.deploy.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "chart.fullname" . }}-server
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "chart.fullname" . }}-server
+        {{- include "chart.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "chart.fullname" . }}-server
+          image: {{ .Values.server.deploy.containers.image}}
+          imagePullPolicy: {{ .Values.server.deploy.containers.image}}
+          command: ["uvicorn", "main:app", ""--host 0.0.0.0", "--port 8000"]
+          env:
+            - name: DATABASE_URL
+              value: "postgresql+psycopg2://postgres:postgres@{{ include "chart.fullname" . }}-postgres:5432"
+          ports:
+            - name: {{ .Values.server.deploy.containers.ports.name }}
+              containerPort: {{ .Values.server.deploy.containers.ports.containerPort }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
